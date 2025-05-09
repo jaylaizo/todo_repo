@@ -1,0 +1,48 @@
+{% extends 'base/main.html' %} {% block content%}
+{% if request.user.is_authenticated %}
+<p>{{request.user}}</p>
+<form action="{% url 'logout' %}" method="post" style="display: inline">
+  {% csrf_token %}
+  <a href="#" onclick="event.preventDefault(); this.closest('form').submit();"
+    >Logout</a
+  >
+</form>
+{% else %}
+<a href="{% url 'login' %}">Login</a>
+{% endif %}
+
+<hr />
+<h1>to do list</h1>
+<a href="{%url 'task-create'%}">add task</a>
+
+<form method="GET">
+  <input type="text" name="search-area" value="{{search_input}}" placeholder="search....." />
+  <input type="submit" value="Search" />
+  {% if search_input %}
+  <a href="{% url 'tasks' %}">Clear</a>
+  {% endif %}
+</form>
+
+<table>
+  <tr>
+    <th>list of my todo activities</th>
+    <th></th>
+    <th></th>
+  </tr>
+  {% for task in tasks %}
+
+  <tr>
+    <td>{{task.title}}</td>
+
+    
+    <td><a href="{% url 'task-update' task.id %}"> edit </a></td>
+    <td><a href="{% url 'task-delete' task.id %}"> Delete </a></td>
+
+  </tr>
+  {% empty %}
+  <h3>no item in list</h3>
+
+  {%endfor%}
+</table>
+{% endblock content %}
+
